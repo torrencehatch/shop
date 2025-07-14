@@ -179,27 +179,33 @@
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
             transition: all 0.3s ease;
             cursor: pointer;
+            border: 1px solid #f0f0f0;
         }
 
         .product-card:hover {
-            transform: translateY(-10px);
+            transform: translateY(-8px);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
         }
 
         .product-image {
             width: 100%;
-            height: 250px;
-            background: #f8f9fa;
+            height: 300px;
+            background: #ffffff;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 4rem;
-            color: #26a69a;
-            transition: background 0.3s ease;
+            padding: 2rem;
+            transition: transform 0.3s ease;
         }
 
         .product-card:hover .product-image {
-            background: #e9f7f5;
+            transform: scale(1.05);
+        }
+
+        .product-image img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
         }
 
         .product-info {
@@ -215,13 +221,7 @@
 
         .product-info p {
             color: #6c757d;
-            margin-bottom: 1rem;
-        }
-
-        .product-price {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: #26a69a;
+            margin-bottom: 0;
         }
 
         /* Impact Section */
@@ -422,35 +422,39 @@
         </div>
         <div class="products-grid">
             <div class="product-card">
-                <div class="product-image">💧</div>
+                <div class="product-image">
+                    <img src="Drop of Hope.png" alt="Drop of Hope t-shirt design">
+                </div>
                 <div class="product-info">
                     <h3>Drop of Hope</h3>
                     <p>Minimalist design supporting water access projects</p>
-                    <div class="product-price">$28</div>
                 </div>
             </div>
             <div class="product-card">
-                <div class="product-image">🌱</div>
+                <div class="product-image">
+                    <img src="Growth Mindset.png" alt="Growth Mindset t-shirt design">
+                </div>
                 <div class="product-info">
                     <h3>Growth Mindset</h3>
                     <p>Eco-friendly tee promoting sustainable living</p>
-                    <div class="product-price">$32</div>
                 </div>
             </div>
             <div class="product-card">
-                <div class="product-image">🤝</div>
+                <div class="product-image">
+                    <img src="Unity.png" alt="Unity t-shirt design">
+                </div>
                 <div class="product-info">
                     <h3>Unity</h3>
                     <p>Celebrating community and collective action</p>
-                    <div class="product-price">$30</div>
                 </div>
             </div>
             <div class="product-card">
-                <div class="product-image">🌍</div>
+                <div class="product-image">
+                    <img src="One Planet.png" alt="One Planet t-shirt design">
+                </div>
                 <div class="product-info">
                     <h3>One Planet</h3>
                     <p>Bold statement for environmental consciousness</p>
-                    <div class="product-price">$29</div>
                 </div>
             </div>
         </div>
