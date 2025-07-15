@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>BNKR WIRE - 2019 ink</title>
+    <style>
+        @font-face {
+            font-family: 'HelveticaNowBold';
+            src: url('helvetica-now-bold.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            color: #fff;
+            font-family: 'HelveticaNowBold', sans-serif;
+            line-height: 1.6;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: calc(30px + env(safe-area-inset-top));
+            left: 30px;
+            color: #fff;
+            text-decoration: none;
+            padding: 15px 25px;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            background: rgba(0, 0, 0, 0.85);
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            z-index: 100;
+            -webkit-tap-highlight-color: transparent;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.95);
+            color: #000;
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 120px 20px 60px;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: start;
+        }
+
+        .product-images {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .main-image {
+            width: 100%;
+            border-radius: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .main-image:hover {
+            transform: scale(1.02);
+        }
+
+        .thumbnail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .thumbnail {
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .thumbnail:hover {
+            border-color: rgba(255, 255, 255, 0.8);
+            transform: scale(1.05);
+        }
+
+        .product-info {
+            padding-left: 40px;
+        }
+
+        .product-title {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .product-price {
+            font-size: 1.8rem;
+            color: #ccc;
+            margin-bottom: 30px;
+        }
+
+        .product-description {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            margin-bottom: 40px;
+            color: #ddd;
+        }
+
+        .size-selector {
+            margin-bottom: 30px;
+        }
+
+        .size-label {
+            display: block;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .size-options {
+            display: flex;
+            gap: 15px;
+        }
+
+        .size-option {
+            padding: 12px 20px;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            background: transparent;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-weight: 600;
+            border-radius: 6px;
+        }
+
+        .size-option:hover,
+        .size-option.selected {
+            background: rgba(255, 255, 255, 0.9);
+            color: #000;
+            border-color: rgba(255, 255, 255, 0.9);
+        }
+
+        .buy-btn {
+            display: inline-block;
+            padding: 20px 40px;
+            background: #fff;
+            color: #000;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 1px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            border: 2px solid #fff;
+            font-size: 1.1rem;
+        }
+
+        .buy-btn:hover {
+            background: transparent;
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        .product-details {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .detail-item {
+            margin-bottom: 15px;
+            display: flex;
+            gap: 20px;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            min-width: 120px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .detail-value {
+            color: #ccc;
+        }
+
+        @media (max-width: 768px) {
+            .product-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            
+            .product-info {
+                padding-left: 0;
+            }
+            
+            .product-title {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 100px 20px 40px;
+            }
+        }
+
+        /* Cart Styles */
+        .cart-toggle {
+            position: fixed;
+            top: calc(30px + env(safe-area-inset-top));
+            right: 30px;
+            background: rgba(0, 0, 0, 0.85);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            color: #fff;
+            padding: 15px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            z-index: 101;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .cart-toggle:hover {
+            background: rgba(255, 255, 255, 0.95);
+            color: #000;
+            transform: translateY(-2px);
+        }
+
+        .cart-count {
+            background: #fff;
+            color: #000;
+            border-radius: 50%;
+            padding: 2px 8px;
+            font-size: 0.8rem;
+            margin-left: 8px;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .cart-sidebar {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.95);
+            border-left: 2px solid rgba(255, 255, 255, 0.2);
+            transition: right 0.3s ease;
+            z-index: 100;
+            padding: 80px 30px 30px;
+            overflow-y: auto;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .cart-sidebar.open {
+            right: 0;
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .cart-title {
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .cart-close {
+            background: none;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .cart-close:hover {
+            background: rgba(255, 255, 255, 0.9);
+            color: #000;
+        }
+
+        .cart-items {
+            margin-bottom: 30px;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .cart-item-image {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-right: 15px;
+        }
+
+        .cart-item-details {
+            flex: 1;
+        }
+
+        .cart-item-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+        }
+
+        .cart-item-size {
+            color: #ccc;
+            font-size: 0.8rem;
+            margin-bottom: 5px;
+        }
+
+        .cart-item-price {
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .cart-item-remove {
+            background: none;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #fff;
+            padding: 5px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.8rem;
+        }
+
+        .cart-item-remove:hover {
+            background: rgba(255, 255, 255, 0.9);
+            color: #000;
+        }
+
+        .cart-total {
+            padding: 20px 0;
+            border-top: 2px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+        }
+
+        .cart-total-amount {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .cart-checkout {
+            width: 100%;
+            padding: 15px;
+            background: #fff;
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .cart-checkout:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-2px);
+        }
+
+        .cart-empty {
+            text-align: center;
+            color: #ccc;
+            padding: 40px 0;
+        }
+    </style>
+</head>
+<body>
+    <a href="shop.html" class="back-btn">← Back to Shop</a>
+    
+    <!-- Cart Toggle Button -->
+    <div class="cart-toggle" onclick="toggleCart()">
+        Cart <span class="cart-count" id="cartCount">0</span>
+    </div>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <div class="cart-title">Your Cart</div>
+            <button class="cart-close" onclick="toggleCart()">✕</button>
+        </div>
+        
+        <div class="cart-items" id="cartItems">
+            <div class="cart-empty" id="cartEmpty">Your cart is empty</div>
+        </div>
+        
+        <div class="cart-total" id="cartTotal" style="display: none;">
+            <div class="cart-total-amount" id="cartTotalAmount">Total: $0.00</div>
+            <button class="cart-checkout" onclick="proceedToCheckout()">Checkout</button>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="product-grid">
+            <div class="product-images">
+                <img src="black-shirt.png" alt="BNKR WIRE Design - Main" class="main-image" id="mainImage">
+                <div class="thumbnail-grid">
+                    <img src="black-shirt.png" alt="BNKR WIRE - Front" class="thumbnail" onclick="changeImage(this)">
+                    <img src="black-shirt.png" alt="BNKR WIRE - Back" class="thumbnail" onclick="changeImage(this)">
+                    <img src="black-shirt.png" alt="BNKR WIRE - Detail" class="thumbnail" onclick="changeImage(this)">
+                    <img src="black-shirt.png" alt="BNKR WIRE - Lifestyle" class="thumbnail" onclick="changeImage(this)">
+                </div>
+            </div>
+            
+            <div class="product-info">
+                <h1 class="product-title">BNKR WIRE</h1>
+                <div class="product-price">$45.00</div>
+                
+                <div class="product-description">
+                    Underground frequency meets streetwear. The BNKR WIRE design channels raw electronic energy through minimalist aesthetics. This piece represents the intersection of digital culture and physical expression—a statement for those who operate outside conventional channels.
+                </div>
+                
+                <div class="size-selector">
+                    <label class="size-label">Size</label>
+                    <div class="size-options">
+                        <div class="size-option" onclick="selectSize(this)">XS</div>
+                        <div class="size-option" onclick="selectSize(this)">S</div>
+                        <div class="size-option selected" onclick="selectSize(this)">M</div>
+                        <div class="size-option" onclick="selectSize(this)">L</div>
+                        <div class="size-option" onclick="selectSize(this)">XL</div>
+                        <div class="size-option" onclick="selectSize(this)">XXL</div>
+                    </div>
+                </div>
+                
+                <button class="buy-btn" onclick="addToCart()">Add to Cart</button>
+                
+                <div class="product-details">
+                    <div class="detail-item">
+                        <div class="detail-label">Material:</div>
+                        <div class="detail-value">100% Premium Cotton</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Print:</div>
+                        <div class="detail-value">Water-based ink, fade resistant</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Fit:</div>
+                        <div class="detail-value">Oversized streetwear cut</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Edition:</div>
+                        <div class="detail-value">Limited 2019 ink series</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize global cart if it doesn't exist
+        window.cart = window.cart || {
+            items: [],
+            total: 0
+        };
+
+        let selectedSize = 'M'; // Default size
+
+        function changeImage(thumbnail) {
+            const mainImage = document.getElementById('mainImage');
+            mainImage.src = thumbnail.src;
+            mainImage.alt = thumbnail.alt;
+        }
+
+        function selectSize(sizeElement) {
+            document.querySelectorAll('.size-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            sizeElement.classList.add('selected');
+            selectedSize = sizeElement.textContent;
+        }
+
+        function addToCart() {
+            const product = {
+                id: 'bnkr-wire',
+                name: 'BNKR WIRE',
+                price: 45.00,
+                size: selectedSize,
+                image: 'black-shirt.png'
+            };
+
+            window.cart.items.push(product);
+            updateCartDisplay();
+            
+            // Show feedback
+            const button = document.querySelector('.buy-btn');
+            const originalText = button.textContent;
+            button.textContent = 'Added to Cart!';
+            button.style.background = '#4CAF50';
+            
+            setTimeout(() => {
+                button.textContent = originalText;
+                button.style.background = '#fff';
+            }, 1500);
+        }
+
+        // Cart functionality
+        function toggleCart() {
+            const sidebar = document.getElementById('cartSidebar');
+            sidebar.classList.toggle('open');
+        }
+
+        function updateCartDisplay() {
+            const cartCount = document.getElementById('cartCount');
+            const cartItems = document.getElementById('cartItems');
+            const cartEmpty = document.getElementById('cartEmpty');
+            const cartTotal = document.getElementById('cartTotal');
+            const cartTotalAmount = document.getElementById('cartTotalAmount');
+
+            // Update cart count
+            cartCount.textContent = window.cart.items.length;
+
+            if (window.cart.items.length === 0) {
+                cartEmpty.style.display = 'block';
+                cartTotal.style.display = 'none';
+                cartItems.innerHTML = '<div class="cart-empty">Your cart is empty</div>';
+            } else {
+                cartEmpty.style.display = 'none';
+                cartTotal.style.display = 'block';
+
+                // Build cart items HTML
+                let cartHTML = '';
+                let total = 0;
+
+                window.cart.items.forEach((item, index) => {
+                    total += item.price;
+                    cartHTML += `
+                        <div class="cart-item">
+                            <img src="${item.image}" alt="${item.name}" class="cart-item-image">
+                            <div class="cart-item-details">
+                                <div class="cart-item-name">${item.name}</div>
+                                <div class="cart-item-size">Size: ${item.size}</div>
+                                <div class="cart-item-price">${item.price.toFixed(2)}</div>
+                            </div>
+                            <button class="cart-item-remove" onclick="removeFromCart(${index})">Remove</button>
+                        </div>
+                    `;
+                });
+
+                cartItems.innerHTML = cartHTML;
+                cartTotalAmount.textContent = `Total: ${total.toFixed(2)}`;
+                window.cart.total = total;
+            }
+        }
+
+        function removeFromCart(index) {
+            window.cart.items.splice(index, 1);
+            updateCartDisplay();
+        }
+
+        function proceedToCheckout() {
+            if (window.cart.items.length === 0) return;
+            
+            // For now, alert with cart contents
+            // Later you can integrate with Stripe for multiple items
+            alert(`Proceeding to checkout with ${window.cart.items.length} items totaling ${window.cart.total.toFixed(2)}`);
+        }
+
+        // Initialize cart display on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCartDisplay();
+        });
+    </script>
+</body>item">
+                        <div class="detail-label">Edition:</div>
+                        <div class="detail-value">Limited 2019 ink series</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function changeImage(thumbnail) {
+            const mainImage = document.getElementById('mainImage');
+            mainImage.src = thumbnail.src;
+            mainImage.alt = thumbnail.alt;
+        }
+
+        function selectSize(sizeElement) {
+            document.querySelectorAll('.size-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            sizeElement.classList.add('selected');
+        }
+    </script>
+</body>
+</html>

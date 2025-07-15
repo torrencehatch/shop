@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Shop - 2019 ink</title>
+    <style>
+        @font-face {
+            font-family: 'HelveticaNowBold';
+            src: url('helvetica-now-bold.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            color: #fff;
+            font-family: 'HelveticaNowBold', sans-serif;
+            text-align: center;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: calc(30px + env(safe-area-inset-top));
+            left: 30px;
+            color: #fff;
+            text-decoration: none;
+            padding: 15px 25px;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            background: rgba(0, 0, 0, 0.85);
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            z-index: 100;
+            -webkit-tap-highlight-color: transparent;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.95);
+            color: #000;
+            transform: translateY(-2px);
+        }
+
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 60px;
+            margin: 100px auto;
+            max-width: 900px;
+            padding: 0 20px;
+        }
+
+        .products a img {
+            width: 100%;
+            max-width: 400px;
+            margin: auto;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .products a img:hover {
+            transform: scale(1.05);
+        }
+
+        /* Cart Styles */
+        .cart-toggle {
+            position: fixed;
+            top: calc(30px + env(safe-area-inset-top));
+            right: 30px;
+            background: rgba(0, 0, 0, 0.85);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            color: #fff;
+            padding: 15px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            z-index: 101;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .cart-toggle:hover {
+            background: rgba(255, 255, 255, 0.95);
+            color: #000;
+            transform: translateY(-2px);
+        }
+
+        .cart-count {
+            background: #fff;
+            color: #000;
+            border-radius: 50%;
+            padding: 2px 8px;
+            font-size: 0.8rem;
+            margin-left: 8px;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .cart-sidebar {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.95);
+            border-left: 2px solid rgba(255, 255, 255, 0.2);
+            transition: right 0.3s ease;
+            z-index: 100;
+            padding: 80px 30px 30px;
+            overflow-y: auto;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .cart-sidebar.open {
+            right: 0;
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .cart-title {
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .cart-close {
+            background: none;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .cart-close:hover {
+            background: rgba(255, 255, 255, 0.9);
+            color: #000;
+        }
+
+        .cart-items {
+            margin-bottom: 30px;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .cart-item-image {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-right: 15px;
+        }
+
+        .cart-item-details {
+            flex: 1;
+        }
+
+        .cart-item-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+        }
+
+        .cart-item-size {
+            color: #ccc;
+            font-size: 0.8rem;
+            margin-bottom: 5px;
+        }
+
+        .cart-item-price {
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .cart-item-remove {
+            background: none;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #fff;
+            padding: 5px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.8rem;
+        }
+
+        .cart-item-remove:hover {
+            background: rgba(255, 255, 255, 0.9);
+            color: #000;
+        }
+
+        .cart-total {
+            padding: 20px 0;
+            border-top: 2px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+        }
+
+        .cart-total-amount {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .cart-checkout {
+            width: 100%;
+            padding: 15px;
+            background: #fff;
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .cart-checkout:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-2px);
+        }
+
+        .cart-empty {
+            text-align: center;
+            color: #ccc;
+            padding: 40px 0;
+        }
+
+        @media (max-width: 768px) {
+            .cart-sidebar {
+                width: 100vw;
+                right: -100vw;
+            }
+            
+            .cart-toggle {
+                right: 20px;
+                padding: 12px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-btn">← Back</a>
+    <div class="products">
+        <a href="shirt1.html">
+            <img src="black-shirt.png" alt="BNKR WIRE - 2019 ink">
+        </a>
+        <a href="shirt2.html">
+            <img src="black-shirt.png" alt="VOID FREQUENCY - 2019 ink">
+        </a>
+        <a href="shirt3.html">
+            <img src="black-shirt.png" alt="GHOST PROTOCOL - 2019 ink">
+        </a>
+        <a href="shirt4.html">
+            <img src="black-shirt.png" alt="NEON STATIC - 2019 ink">
+        </a>
+        <a href="shirt5.html">
+            <img src="black-shirt.png" alt="DIGITAL RUST - 2019 ink">
+        </a>
+        <a href="shirt6.html">
+            <img src="black-shirt.png" alt="TERMINAL ACCESS - 2019 ink">
+        </a>
+    </div>
+</body>
+</html>
